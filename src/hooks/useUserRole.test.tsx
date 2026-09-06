@@ -94,6 +94,18 @@ describe("useUserRole", () => {
     await waitFor(() => expect(result.current.isHost).toBe(true));
   });
 
+  it("does not request the host role again for an existing host", async () => {
+    authState.loading = false;
+    authState.user = { id: "u1" };
+    rolesResult.data = [{ role: "host" }];
+    const { result } = renderHook(() => useUserRole());
+    await waitFor(() => expect(result.current.isHost).toBe(true));
+    await act(async () => {
+      await result.current.requestHostRole();
+    });
+    expect(insertMock).not.toHaveBeenCalled();
+  });
+
   it("refuses the host request when signed out", async () => {
     authState.loading = false;
     const { result } = renderHook(() => useUserRole());

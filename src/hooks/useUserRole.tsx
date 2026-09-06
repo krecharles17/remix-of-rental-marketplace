@@ -44,6 +44,7 @@ export const useUserRole = () => {
 
   const requestHostRole = async () => {
     if (!user) return { error: "Not authenticated" };
+    if (roles.length > 0) return { error: null };
 
     const { error } = await supabase
       .from("user_roles")
